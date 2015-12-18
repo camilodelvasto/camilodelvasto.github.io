@@ -1,0 +1,256 @@
+CTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>CodePen - pomodoro timer 2</title>
+    
+    
+    
+    <link rel='stylesheet prefetch' href='//cdnjs.cloudflare.com/ajax/libs/animate.css/3.2.3/animate.min.css'>
+
+        <style>
+      @import url(https://fonts.googleapis.com/css?family=VT323);
+h3 {
+  margin-bottom: 50px;
+}
+
+body {
+  font-family: VT323, monospace;
+  font-size: 25px;
+  text-align: center;
+  background: url(http://www.hopkinsmedicine.org/medart/gallery/student/Tara-tomato.jpg) bottom left no-repeat fixed;
+  background-size: 70%;
+  height: 100vh;
+}
+
+a:link, a:hover, a:visited {
+  color: #C2456D;
+  text-decoration: none;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+}
+
+#bigTimer {
+  margin: 140px auto 0;
+  font-size: 3em;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 4px;
+  line-height: 1.5em;
+  width: 100%;
+  max-width: 340px;
+}
+#bigTimer:hover {
+  cursor: pointer;
+}
+
+#instructions {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+}
+
+.active {
+  color: #C2456D;
+}
+
+@media screen and (min-width: 480px) {
+  body {
+    background-size: 50%;
+  }
+}
+
+    </style>
+
+    
+    
+    
+  </head>
+
+  <body>
+
+    <h3 class="title">{ <span class="active" id="work">I work</span>, <span class="" id="nowork">I don't work</span> }</h3>
+<div id="controls">
+<p>session: <a href="#" id="minusS">-</a> <span id="session"></span> <a href="#" id="plusS">+</a></p>
+<p>break: <a href="#" id="minusR">-</a> <span id="break"></span> <a href="#" id="plusR">+</a></p>
+</div>
+<div id="bigTimer">{ <span id="display"></span> }</div>
+
+<div id="instructions">
+  <p><a href="#" id="start">start</a> <a href="#" id="pause">pause</a> <a href="#" id="stop">reset</a></p>
+</div>
+
+<audio id="blop">
+  <source src="http://res.cloudinary.com/startics/video/upload/v1450323144/Blop-Mark_DiAngelo-79054334_sbvnme.mp3" type="audio/mpeg">
+</audio>
+    
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+        <script>
+      $(document).ready(function() {
+
+  var pomodoro = function(t1, t2) {
+    this.session = t1 || 25;
+    this.rest = t2 || 5;
+    this.pom = true; //this param tells us if we are on a session or on a break
+    this.counter;
+    this.state = 0; //0 is just initialized, 1 is running, -1 is paused
+    this.intervalID;
+
+    //methods
+    this.initialize = function() {
+      thisObj = this;
+      thisObj.state = 0;
+      thisObj.counter = (thisObj.pom ? thisObj.session : thisObj.rest) * 60;
+      document.getElementById("display").innerHTML = (Math.floor(thisObj.counter / 60) < 10 ? '0' : '') + Math.floor(thisObj.counter / 60) + ':' + (thisObj.counter % 60 < 10 ? '0' : '') + thisObj.counter % 60;
+    }
+
+    this.run = function() {
+      thisObj = this;
+      if (thisObj.state == 0) thisObj.initialize();
+      if (thisObj.state < 1 && thisObj.counter > 0) {
+        $("#controls").addClass("animated bounceOut");
+        $("#bigTimer").addClass("animated flash");
+        thisObj.state = 1;
+        thisObj.intervalID = setInterval(function() {
+          thisObj.counter--;
+          thisObj.display();
+          if (Math.floor(thisObj.counter) == 0) {
+            clearInterval(thisObj.intervalID);
+            thisObj.switch();
+          }
+
+        }, 1000);
+      }
+
+      this.pause = function() {
+        thisObj = this;
+        thisObj.state = -1;
+        clearInterval(thisObj.intervalID);
+        $("#bigTimer").removeClass("animated flash");
+      }
+
+      this.switch = function() {
+        thisObj = this;
+        thisObj.pom = (thisObj.pom ? false : true);
+        $(".title").children().removeClass("active animated pulse");
+        if (thisObj.pom) {
+          $("#work").addClass("active animated pulse");
+        } else {
+          $("#nowork").addClass("active animated pulse");
+        }
+        thisObj.initialize();
+        thisObj.run();
+        thisObj.display();
+        $("#blop").trigger('play');
+      }
+
+      this.stop = function() {
+        thisObj = this;
+        thisObj.state = 0;
+        thisObj.pom = true;
+        thisObj.counter = thisObj.session * 60;
+        thisObj.display();
+        clearInterval(thisObj.intervalID);
+        $(".title").children().removeClass("active animated pulse");
+        $("#work").addClass("active animated pulse");
+        $("#controls").removeClass("bounceOut").addClass("bounceIn");
+        $("#bigTimer").removeClass("animated flash");
+      }
+
+      this.display = function() {
+        thisObj = this;
+        document.getElementById("display").innerHTML = (Math.floor(thisObj.counter / 60) < 10 ? '0' : '') + Math.floor(thisObj.counter / 60) + ':' + (thisObj.counter % 60 < 10 ? '0' : '') + thisObj.counter % 60;
+      }
+    }
+  }
+
+  //global vars
+  var mySession = 25;
+  var myBreak = 5;
+
+  function initPomodoro() {
+    t = new pomodoro(mySession, myBreak);
+    t.initialize();
+    updateSettings();
+  };
+  initPomodoro();
+
+  function updateSettings() {
+    document.getElementById('session').innerHTML = mySession + ' minutes';
+    document.getElementById('break').innerHTML = myBreak + ' minutes';
+  }
+
+  $("#start").click(function(e) {
+    e.preventDefault();
+    t.run();
+  })
+
+  $("#pause").click(function(e) {
+    e.preventDefault();
+    t.pause();
+  })
+
+  $("#stop").click(function(e) {
+    e.preventDefault();
+    t.stop();
+  })
+
+  // controls for pomodoro settings
+  $("#plusS").click(function(e) {
+    e.preventDefault();
+    if (mySession < 90) {
+      mySession++;
+    }
+    initPomodoro();
+  })
+
+  $("#minusS").click(function(e) {
+    e.preventDefault();
+    if (mySession > 1) {
+      mySession--;
+    }
+    initPomodoro();
+  })
+
+  $("#plusR").click(function(e) {
+    e.preventDefault();
+    if (myBreak < 30) {
+      myBreak++;
+    }
+    initPomodoro();
+  })
+
+  $("#minusR").click(function(e) {
+    e.preventDefault();
+    if (myBreak > 1) {
+      myBreak--;
+    }
+    initPomodoro();
+  })
+
+  $("#bigTimer").click(function(e) {
+    e.preventDefault();
+    if (t.state == 1) {
+      t.pause();
+    } else {
+      t.run();
+    }
+  })
+
+})
+      //@ sourceURL=pen.js
+    </script>
+
+    
+    
+    
+  </body>
+</html>
+ 
+
+
