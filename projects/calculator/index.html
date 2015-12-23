@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>CodePen - simple calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    
+        <style>
+      @import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono);
+h3 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+body, input, button {
+  font-family: "Share Tech Mono", monospace;
+  font-size: 30px;
+}
+
+#answer {
+  color: #d0d0d0;
+  font-size: 20px;
+  display: block;
+  text-align: left;
+}
+
+#display {
+  display: block;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  text-align: right;
+  font-size: 40px;
+  white-space: nowrap;
+  width: 346px;
+}
+
+#calculator {
+  width: 353px;
+  margin: 30px auto;
+}
+
+button {
+  width: 80px;
+  height: 45px;
+  padding: 0;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  background: #f0f0f0;
+}
+button:hover {
+  cursor: pointer;
+}
+button:focus {
+  outline: 0;
+  background: #d0d0d0;
+}
+button.operator {
+  background: #e5d2d1;
+  margin-right: 0;
+}
+button.operator :focus {
+  background: #d5c2c1;
+}
+button#clear {
+  background: #c2d5c1;
+}
+button.calculate {
+  background: #a4a7d9;
+}
+
+    </style>
+
+    
+    
+    
+  </head>
+
+  <body>
+
+    <h3>{ simple calculator }</h3>
+
+<div id="calculator">
+
+  <div id="answer">On</div>
+  <input id="display" type="text" readonly />
+  <button id="percentage" value="%">%</button><button id="ans" value="ans">ans</button><button id="back" value="back">CE</button><button id="clear" value="clear" class="operator">AC</button><button id="n7" value="7">7</button><button id="n8" value="8">8</button><button id="n9" value="9">9</button><button id="over" value="/" class="operator">/</button><button id="n4" value="4">4</button><button id="n5" value="5">5</button><button id="n6" value="6">6</button><button id="times" value="x" class="operator">x</button><button id="n1" value="1">1</button><button id="n2" value="2">2</button><button id="n3" value="3">3</button><button id="minus" value="-" class="operator">-</button><button id="n0" value="0">0</button><button id="ndot" value=".">.</button><button id="calculate" value="=" class="calculate">=</button><button id="plus" value="+" class="operator">+</button>
+</div>
+    
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://mathjs.org/js/lib/math.js'></script>
+
+        <script>
+      $(document).ready(function(){
+
+  var expression = '0';
+  var answer = '0';
+  var ansMem = '0';
+
+  //some flags for peace of mind
+  var lastArg = '';
+  var isOperator = false;
+  var isAns = false;
+  var isErr = false;
+  var isDot = false;
+  var isDecimal = false;  
+  
+  $('html').click(function(){
+    setCaretPosition('display',$("#display").val().length);  
+  })
+
+  
+  $('button').mousedown(function(){
+    $("#display").val(''); //remove the value so the display's caret doesn't jump back to the begin
+    setCaretPosition('display',$("#display").val().length);  
+  })
+    
+  //let's put those vars here so that they are not that accessible for the user
+  $("#display").html('<span>'+answer+'</span>' + expression);
+
+  
+  $("button").click(function(){
+    var value = $(this).attr("value");
+    
+    //let's traverse the options depending on the key that was pressed
+    switch(value){
+      case '1':
+      case "2":
+      case "3":
+      case "4":
+      case "5":
+      case "6":
+      case "7":
+      case "8":
+      case "9":
+      case "0":
+        if(!isOperator && !isAns) {
+          if(getLastArg() == 0 && !isDot && !isDecimal) {
+            expression = expression.slice(0,-1) + value;
+          } else {
+            expression += value;
+          }
+        } else if (isAns){
+          expression = value;
+        } else {
+          expression += value;
+        }
+        isOperator = false;
+        isAns = false;
+        isDot = false;
+        isErr = false;
+        break;
+        
+      case "%":
+        if(!isOperator && !isErr){
+          expression += "%x";
+          isOperator = true;
+          isAns = false;
+          isDot = false;
+          isDecimal = false;
+        }
+        break;
+      
+      case "clear":
+        expression = '0';
+        answer = 'Cleared';
+        isOperator = false;
+        isAns = false;
+        isDot = false;
+        isDecimal = false;
+        isError = false;
+        break;
+      
+      case "back":
+        if(expression.length > 1) expression = expression.slice(0,-1);
+        else expression = '0';
+        var temp = expression;
+        if(temp.charAt(temp.length-1) == "/" || temp.charAt(temp.length-1) == "x" || temp.charAt(temp.length-1) == "+" || temp.charAt(temp.length-1) == "-"){
+          isOperator = true;
+          isAns = false;
+          isDot = false;
+          isDecimal = false;
+
+        }
+        break;
+    
+      case "=":
+        if (!isAns) {
+          answer = expression;
+          try {
+            expression = expression.replace("%",'/100');
+            expression = expression.replace("x",'*');
+            expression = math.format(math.eval(expression.replace(/[^0-9%()e*\/+.-]/,'')),10);
+            ansMem = expression;
+          } catch(e) {
+            if (e instanceof SyntaxError) {
+              expression = 'Error';
+              isErr = true;
+            }
+          }
+        }
+        if (expression == 'Infinity' || expression == '-Infinity' || expression == "undefined") isErr = true;
+        isAns = true;
+        isOperator = false;
+        isDot = false;
+        isDecimal = false;
+        break;
+        
+        //in case we have an operator
+      case "+":
+      case "/":
+      case "x":
+      case "%":
+        if (!isOperator && !isErr) {
+          expression += value;
+          isOperator = true;
+          isAns = false;
+          isDot = false;
+          isDecimal = false;
+        } else if (isOperator && !isErr){
+          expression = expression.slice(0,-1) + value;
+          isOperator = true;
+          isAns = false;
+          isDot = false;
+          isDecimal = false;
+        } else {
+          
+        }
+        break;
+      
+      case "-":
+        if(!isAns && !isErr){
+          var lastChar = expression.charAt(expression.length-1);
+          if(lastChar != '+' && lastChar != '-') expression += value;
+          else expression = expression.slice(0,-1) + value;
+          isOperator = true;
+          isAns = false;
+          isDot = false;
+          isErr = false;
+          isDecimal = false;
+        }
+        else if (!isErr){
+          expression += value;
+          isOperator = true;
+          isAns = false;
+          isDot = false;
+          isErr = false;
+          isDecimal = false;
+        }
+        break;
+        
+      case '.':
+        if(!isAns && !isDot) {
+          var temp = getLastArg();
+          if(temp.indexOf('.') == -1) {
+            expression += value;
+            isErr = false;
+            isOperator = false;
+            isAns = false;
+            isDot = true;
+            isDecimal = true;
+          }
+        }
+        else if(isAns){
+          expression = '0.'; 
+          isErr = false;
+          isOperator = false;
+          isAns = false;
+          isDot = true;
+          isDecimal = true;
+        }
+        break;
+        
+      case 'ans':
+        if(!isErr && isOperator && !isAns){
+          expression += ansMem;
+        }
+        break;
+    }
+    
+    
+    $("#display").val(expression.replace('*','x'));
+    $("#answer").html('<span>'+answer+'</span>');
+   
+    var temp = $("#display").val();
+    $("#display").val('');
+    $("#display").val(temp);
+    setCaretPosition('display',$("#display").val().length);
+  })
+  
+  function getLastArg(){
+    var temp = expression.split(/[x+\/ -]/);
+    //what happens if it's dot??
+    return temp[temp.length-1];
+  }
+  
+  $(document).keypress(function(event) {
+    var keyCode = (event.keyCode ? event.keyCode : event.which);
+    var charStr = String.fromCharCode(keyCode);
+    if (48 <= keyCode && keyCode <= 57) {
+        $('button[value='+eval(keyCode-48)+']').trigger('click');
+    }
+    if (13 == keyCode || keyCode == 187) $('button#calculate').trigger('click');
+    if (charStr == '=') $('#calculate').trigger('click');
+    if (charStr == '-') $('#minus').trigger('click');
+    if (charStr == 'x') $('#times').trigger('click');
+    if (charStr == '*') $('#times').trigger('click');
+    if (charStr == '+') $('#plus').trigger('click');
+    if (charStr == '/') $('#over').trigger('click');
+    if (charStr == '.') $('#ndot').trigger('click');
+    if (charStr == '%') $('#percentage').trigger('click');
+    if (keyCode == 8 || keyCode == 46) $('#back').trigger('click');
+  });
+  
+})
+  
+  /* todos
+  - format output/input (limit number of chars)
+  - display error if more than x numbers
+  */
+
+
+
+
+
+// function wrote by MarkPieszak on SO for positioning cursor on the input element
+function setCaretPosition(elemId, caretPos) {
+    var el = document.getElementById(elemId);
+
+    el.value = el.value;
+    if (el !== null) {
+
+        if (el.createTextRange) {
+            var range = el.createTextRange();
+            range.move('character', caretPos);
+            range.select();
+            return true;
+        }
+
+        else {
+            if (el.selectionStart || el.selectionStart === 0) {
+                el.focus();
+                el.setSelectionRange(caretPos, caretPos);
+                return true;
+            }
+
+            else  { 
+                el.focus();
+                return false;
+            }
+        }
+    }
+}
+      //@ sourceURL=pen.js
+    </script>
+
+    
+    
+    
+  </body>
+</html>
+ 
+
