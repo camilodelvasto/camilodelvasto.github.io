@@ -20,7 +20,7 @@
   ga('create', 'UA-15029066-1', 'auto');
   ga('send', 'pageview');
 
-</script>      
+</script>     
     
         <style>
       @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
@@ -203,6 +203,9 @@ $(document).ready(function(){
       .done (function(location) {
         myCity = location.city;
         myCountry = location.country_name;
+        lat = location.latitude;
+        long = location.longitude;
+        grabWeather(lat,long);
         $('.infoline').html('location known...');
     });
   })();
