@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>CodePen - { weather* }</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-15029066-1', 'auto');
+  ga('send', 'pageview');
+
+</script>    
+    
+        <style>
+      @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro);
+html, body {
+  font-family: "Crafty Girls", serif;
+  font-family: "Source Sans Pro", sans-serif;
+  position: relative;
+  font-weight: 100;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.9);
+  background: #000;
+  text-shadow: 1px 1px 70px #000;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+p {
+  font-size: 13px;
+}
+
+a:hover, a:link, a:visited {
+  color: inherit;
+}
+
+#map-canvas {
+  height: 100%;
+}
+
+#cover {
+  display: table;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  -webkit-transition: background 300ms ease-in 2s;
+  -moz-transition: background 300ms ease-in 2s;
+  -o-transition: background 300ms ease-in 2s;
+  transition: background 300ms ease-in 2s;
+  -webkit-transition-property: background;
+  -webkit-transition-duration: 300ms;
+  -webkit-transition-timing-function: ease-in;
+  -webkit-transition-delay: 100ms;
+  -moz-transition-property: background;
+  -moz-transition-duration: 300ms;
+  -moz-transition-timing-function: ease-in;
+  -moz-transition-delay: 100ms;
+  -o-transition-property: background;
+  -o-transition-duration: 300ms;
+  -o-transition-timing-function: ease-in;
+  -o-transition-delay: 100ms;
+  transition-property: background;
+  transition-duration: 300ms;
+  transition-timing-function: ease-in;
+  transition-delay: 100ms;
+}
+
+#logo {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  line-height: 20px;
+}
+
+#big-title {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  text-align: center;
+  display: table;
+  margin: 5%;
+  font-size: 40px;
+}
+
+.center-me {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.weather {
+  font-style: italic;
+}
+
+#time-now {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  text-align: right;
+}
+
+#this-pic {
+  position: absolute;
+  max-width: 40%;
+  left: 10px;
+  bottom: 10px;
+  color: rgba(255, 255, 170, 0.9);
+}
+#this-pic:hover {
+  cursor: pointer;
+}
+
+#reload-pic {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  text-decoration: underline;
+  color: rgba(255, 255, 170, 0.9);
+}
+#reload-pic:hover {
+  cursor: pointer;
+}
+
+.unit-switch {
+  color: rgba(255, 255, 170, 0.9);
+  text-decoration: underline;
+}
+.unit-switch:hover {
+  cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  #big-title {
+    font-size: 30px;
+  }
+
+  p {
+    font-size: 12px;
+  }
+}
+
+    </style>
+
+    
+    
+    
+  </head>
+
+  <body>
+
+    <div id="cover">
+  <p id="logo">{ weather* }</p>
+  <div id="big-title"><div class="center-me" id="city-co">loading...</div></div>
+  <p id="time-now"></p>
+  <p id="this-pic"></p>
+  <p id="reload-pic"></p>
+</div>
+    
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='https://maps.googleapis.com/maps/api/js?v=3.exp'></script>
+
+        <script>
+        var myCity = '', myCountry = '';
+  var myWeatherDescription,myWeather;
+  var myTime = '';
+  var lat = '';
+  var long = '';
+  var message = '';
+  var error = '';
+  var temperature;
+  var chosenPhotoURL, chosenPhotoTitle; 
+  var usUnit = false;
+  var now = new Date();
+
+$(document).ready(function(){
+
+  (function getGeoLocation(){
+    $.getJSON('https://freegeoip.net/json/') 
+      .done (function(location) {
+        myCity = location.city;
+        myCountry = location.country_name;
+//        updateDisplay();
+    });
+  })();
+  
+  (function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+  })();
+
+  function showPosition(position) {
+      if(lat !== position.coords.latitude || long !== position.coords.longitude) {
+        lat = position.coords.latitude;
+        long = position.coords.longitude; 
+        grabWeather(lat,long);
+      } 
+  }
+      
+  function grabWeather(lat,long){
+    $.getJSON("//api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&APPID=6658c9f7236f13bc79c5b8b137c9769e", function(json) {
+      var html = "";
+      myWeather = json.weather[0].main;
+      myWeatherDescription = json.weather[0].description;
+      temperature = Math.round(json.main.temp-273);
+      var sunset = new Date((json.sys.sunset)*1000);
+      var sunrise = new Date((json.sys.sunrise)*1000);
+      now = new Date();
+            
+      myTime = (now > sunrise && now < sunset) ? 'day' : 'night';
+      getFlickr(myWeatherDescription,myTime,0);
+    })
+      .fail(function() {
+          console.log("error: weather not available");
+      })
+
+  }
+
+  function getFlickr(weather,time,attempt){
+    if(attempt >= 10) { console.log('too many attempts'); return; }
+    attempt++;
+    var API_KEY = '5ec0fb82aa58d80581919f3d6037e006';
+    var chosenPhoto = '';
+    urlPhotosSearch = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key='+API_KEY+'&text=skyline+urban+buildings+city+'+weather+'+'+time+'&tag_mode=all&sort=interestingness-desc&safe_search=true&per_page=100&page=1&format=json&nojsoncallback=1';
+    $.getJSON(urlPhotosSearch, function(data){
+      if(data.stat === 'fail') { console.log('error on photosSearch: internal error (api key)'); return; }
+      var rand = Math.floor(Math.random()*data.photos.photo.length);
+      chosenPhoto = data.photos.photo[rand].id;
+      chosenPhotoURL = 'https://www.flickr.com/photos/'+data.photos.photo[rand].owner+'/'+data.photos.photo[rand].id; 
+      chosenPhotoTitle = data.photos.photo[rand].title;
+      urlPhotosGetSizes = 'https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key='+API_KEY+'&photo_id='+chosenPhoto+'&format=json&nojsoncallback=1';
+      $.getJSON(urlPhotosGetSizes).success(function(data){
+        if(data.stat === 'fail') { console.log('error on photoGetSizes: internal error (api key)'); return; }
+        var filtered = data.sizes.size.filter(function(element){
+          return element.width >= 900 && element.width <= 1680 && element.height >= 500 && element.width > element.height;
+        });
+        if (filtered.length === 0) { getFlickr(weather,time,attempt); return; }
+        var c = new Image();
+        c.onload = function(){
+            $("#cover").css('background-image', 'url('+filtered[0].source+')');  
+            updateDisplay();
+            updateTime();
+        }
+        c.src = filtered[0].source;
+      }).fail(function(){
+        console.log('photosGetSizes // flickr api not reachable');
+      });
+
+    }).fail(function(err){
+      console.log('photosSearch // flickr api not reachable');
+    });
+    
+  }
+
+  function updateDisplay(){
+    var myMessage = [' on your head',', not just for you',' above you']
+    var html = ( myCity.length !== 0 ? myCity + ', ' : '');
+    html += ( myCountry.length !== 0 ? myCountry + ', ' : '');
+    html += ( usUnit ? temperature*9/5 + 32 + ' <span class="unit-switch">ºF</span>' : temperature + ' <span class="unit-switch">ºC</span>');
+    html += '<br><span class="weather">'+myWeatherDescription + '</span>' + myMessage[Math.floor(Math.random()*(myMessage.length))];
+     
+    $('#city-co').html(html);
+    switchUnits(); //will enable the event handler
+    $('#this-pic').html('Photo: <a target="_blank" href="'+chosenPhotoURL+'">'+chosenPhotoTitle+'</a>');
+    $('#reload-pic').html('change picture');
+  }
+  
+  function switchUnits(){
+    $('.unit-switch').click(function(){
+      usUnit = !usUnit;
+      updateDisplay();
+    });
+  }
+
+  $('#reload-pic').click(function(){
+    getFlickr(myWeather,myTime,0);
+    $(this).html('loading...');
+  });
+
+  function updateTime(){
+    setInterval(function(){
+      var time = new Date();
+      $('#time-now').html(time.getHours()+':'+ (time.getMinutes()<10 ? '0' : '') + time.getMinutes() + ( myTime == 'day'? ', daytime': ', night'))
+    },354);
+  };
+  
+  
+});
+      //@ sourceURL=pen.js
+    </script>
+
+    
+    
+    
+  </body>
+</html>
+ 
+
