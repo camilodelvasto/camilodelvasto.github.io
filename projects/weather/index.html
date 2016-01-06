@@ -7,7 +7,7 @@
     <meta name="google" value="notranslate">
 
 
-    <title>CodePen - { weather* }</title>
+    <title>{ weather* } - by startics</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
 
     
@@ -41,6 +41,11 @@ html, body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.small{
+  font-size:0.5em;
+  opacity:0.5;
 }
 
 p {
@@ -169,7 +174,7 @@ a:hover, a:link, a:visited {
 
     <div id="cover">
   <p id="logo">{ weather* }</p>
-  <div id="big-title"><div class="center-me" id="city-co">loading...</div></div>
+  <div id="big-title"><div class="center-me" id="city-co">loading...<span class="small">(please enable location services)</span></div></div>
   <p id="time-now"></p>
   <p id="this-pic"></p>
   <p id="reload-pic"></p>
