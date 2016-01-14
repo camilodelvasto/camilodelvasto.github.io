@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>{ camper news } - by camilo delvasto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-15029066-1', 'auto');
+  ga('send', 'pageview');
+
+</script>     
+    
+    
+    
+        <style>
+      @import url(https://fonts.googleapis.com/css?family=Khand|PT+Sans);
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "PT Sans",sans-serif;
+  font-size: 13px;
+  color: #202E39;
+}
+
+h2 {
+  font-family: Khand, sans-serif;
+  font-size: 14px;
+  letter-spacing: .0125em;
+  line-height: 1;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+p {
+  margin: 0;
+}
+
+.stamp a.button {
+  display: block;
+  clear: left;
+  margin: 0;
+  margin-bottom: 5px;
+}
+.stamp a.button.current {
+  background: rgba(40, 50, 80, 0.8);
+}
+
+.message {
+  float: right;
+  font-style: italic;
+}
+
+#bias-label {
+  clear: both;
+  display: block;
+}
+#bias-label:hover {
+  cursor: pointer;
+}
+
+.date {
+  margin-bottom: 5px;
+  color: #202E39;
+}
+.date span {
+  font-style: italic;
+  color: #707E89;
+}
+
+a:link, a:visited {
+  color: #202E39;
+}
+
+a:hover {
+  color: rgba(40, 50, 80, 0.8);
+}
+
+a.button {
+  background: #202E39;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px 0;
+  float: left;
+  text-decoration: none;
+  display: none;
+}
+a.button:hover {
+  background: rgba(40, 50, 80, 0.8);
+}
+
+.grid-item--width3 h2, .grid-item--width4 h2, .grid-item--gigante h2 {
+  font-size: 18px;
+}
+
+/* ---- grid ---- */
+.grid {
+  background: #EEE;
+  max-width: 1200px;
+}
+
+/* clearfix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* ---- grid-item ---- */
+.grid-item {
+  width: 154px;
+  height: 154px;
+  float: left;
+  margin: 3px;
+  border-radius: 5px;
+  background-position: center center;
+  background-size: cover;
+  position: relative;
+}
+
+.grid-item--width2 {
+  width: 154px;
+  height: 200px;
+}
+
+.grid-item--width3 {
+  width: 314px;
+  height: 280px;
+}
+
+.grid-item--width4 {
+  width: 314px;
+  height: 300px;
+}
+
+.grid-item--width5 {
+  width: 314px;
+  height: 360px;
+}
+
+.grid-item--height2 {
+  height: 200px;
+}
+
+.grid-item--height3 {
+  height: 260px;
+}
+
+.grid-item--height4 {
+  height: 360px;
+}
+
+.grid-item--gigante {
+  height: 300px;
+  min-width: 314px;
+}
+.grid-item--gigante .card-content {
+  min-width: 294px;
+  background: rgba(220, 250, 180, 0.8);
+}
+.grid-item--gigante .card-content .meta, .grid-item--gigante .card-content a.button, .grid-item--gigante .card-content div.rank {
+  display: block;
+}
+
+.grid-item:hover {
+  cursor: pointer;
+}
+.grid-item:hover .card-content {
+  background: rgba(220, 250, 180, 0.8);
+}
+
+.rank {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  color: rgba(40, 50, 80, 0.8);
+  display: none;
+}
+
+.stamp {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 144px;
+  height: 360px;
+  background: orange;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 3px;
+  z-index: 1000;
+}
+.stamp h1 {
+  font-size: 17px;
+  line-height: 1;
+  text-align: center;
+  margin-bottom: 70px;
+}
+.stamp #wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.stamp #me {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  text-align: right;
+}
+
+.card-content {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  left: 10px;
+  bottom: 10px;
+  border-radius: 5px;
+  padding: 10px;
+  width: 134px;
+  height: auto;
+  max-height: 80%;
+  min-height: 80px;
+  overflow: hidden;
+}
+.card-content .meta {
+  display: none;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.grid-item--width2 .card-content {
+  width: 134px;
+}
+
+.grid-item--width3 .card-content {
+  width: 294px;
+}
+.grid-item--width3 .card-content .meta {
+  display: blocK;
+}
+
+.grid-item--width4 .card-content {
+  width: 294px;
+}
+.grid-item--width4 .card-content .meta {
+  display: blocK;
+}
+
+.grid-item--width5 .card-content {
+  width: 294px;
+}
+.grid-item--width5 .card-content .meta {
+  display: blocK;
+}
+
+@media screen and (max-width: 490px) {
+  .grid-item {
+    width: 100%;
+    height: 200px;
+    position: relative;
+  }
+  .grid-item .card-content {
+    position: absolute;
+    width: 96%;
+    left: auto;
+    right: 2%;
+    bottom: 2%;
+  }
+  .grid-item .card-content .meta {
+    display: block;
+  }
+
+  .grid-item--width2 {
+    width: 100%;
+    height: 200px;
+  }
+
+  .grid-item--width3 {
+    width: 100%;
+    height: 200px;
+  }
+
+  .grid-item--width4 {
+    width: 100%;
+    height: 200px;
+  }
+
+  .grid-item--gigante .card-content {
+    min-width: 0;
+  }
+
+  .grid-item--width3 h2, .grid-item--width4 h2, .grid-item--gigante h2 {
+    font-size: 14px;
+  }
+
+  .stamp {
+    height: 50px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    border-radius: 0;
+    margin: 0;
+    padding: 5px 0;
+  }
+  .stamp h1 {
+    text-align: left;
+    margin: 5px;
+  }
+  .stamp #me {
+    position: static;
+    text-align: left;
+    padding-left: 5px;
+    font-size: 0.8em;
+  }
+  .stamp .label-buttons {
+    display: none;
+  }
+  .stamp #buttons {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }
+  .stamp #buttons br {
+    display: none;
+  }
+  .stamp #buttons a.button {
+    display: inline;
+    clear: none;
+    margin-left: 2px;
+    font-size: 0.8em;
+  }
+  .stamp #buttons #bias-label {
+    display: none;
+  }
+  .stamp #buttons #newest-label, .stamp #buttons #views-label {
+    position: fixed;
+    right: 5px;
+    top: 35px;
+    line-height: 10px;
+    font-size: 0.8em;
+  }
+}
+
+    </style>
+
+    
+    
+    
+  </head>
+
+  <body>
+
+    <div class="stamp">
+  <div class="wrapper">
+    <h1>{ camper news }</h1><span id="me">by camilo delvasto</span>
+    <p id="label-buttons">order by: </p>
+    <div id="buttons">
+      <a href="#" class="button" id="views">likes</a><label id="views-label" class="message"></label><br>
+      <a href="#" class="button" id="newest">date</a><label id="newest-label" class="message"></label><br>
+      <a href="#" class="button" id="shuffle">shuffle</a><br>
+      <label id="bias-label"><input type="checkbox" id="bias">random card size</input></label>
+    </div>
+  </div>
+</div>
+
+<div class="grid" id="camperNews"></div>
+    
+    <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.2/masonry.pkgd.min.js'></script>
+
+        <script>
+        var grid;
+  var response;
+  var newest = false;
+$(document).ready(function(){
+  var bias = true;
+  var underdog = false;
+  var trending = false;
+  var initialized = false;
+  
+  // load camper news
+  url = 'http://www.freecodecamp.com/news/hot';
+  $.getJSON(url).done(function(data){
+    response = data; // copy the object to a global var
+    displayNews(); // call the method that will manipulate the object
+  }).fail(function(err){
+    console.log('error on loading camper news'+err);
+  });
+  
+  function displayNews(){
+    // get the highest ranking if bias is enabled
+    var max = response.reduce(function(max, element){
+      return ( element.rank > max ? element.rank : max );
+    }, 0);
+    // filter if necessary
+    var arr = response.filter(function(element){
+      return element.rank > 0;
+    });
+    var html = '';
+    
+    // create the grid content from the json response
+    arr.forEach(function(element){
+      var rand = ( !bias ? Math.floor(Math.random()*5) : Math.floor(element.rank/max*5));
+      if(element.headline.length > 0 && element.headline != "undefined" ) { 
+        html += '<div class="grid-item grid-item--width'+rand+'" data-img="'+(element.image.indexOf('http') != -1 ? element.image : element.author.picture)+'">';
+        html += '<div class="card-content"><h2><a href="'+element.link+'" target="_blank">'+element.headline+'</a></h2>';
+        var d = new Date(element.timePosted);
+        var dateString = d.getDate()  + "." + (d.getMonth()+1 < 10 ? '0' : '') + (d.getMonth()+1) + "." + d.getFullYear() + ", " + d.getHours() + ":" + d.getMinutes();
+        html += '<div class="meta"><div class="date"><span>posted: </span>'+ dateString+'<span> by: </span><a href="http://freecodecamp.com/'+element.author.username+'" target="_blank">'+element.author.username+'</a></div>';
+        html += '<div class="rank">'+element.rank+' &#9825;</div>';
+        html += '<p class="description">'+element.metaDescription+'</p>';
+        html += '<p><a class="button" target="_blank" href="'+element.link+'"> get it &raquo;</a></p>';
+        html += '</div></div></div>';
+      }    
+    });
+    // update grid
+    $("#camperNews").html(html);
+    updateImage();
+    createGrid();
+    
+    // initialize masonry
+    function createGrid(){
+      if (initialized) grid.masonry('destroy');
+      grid = $('.grid').masonry({
+        itemSelector: '.grid-item',
+        columnWidth: 160
+      });
+      grid.masonry( 'stamp', $('.stamp') );
+      grid.masonry('layout');
+
+      // listen to grid items
+      if(initialized) grid.unbind('click');
+      grid.on( 'click', '.grid-item', function() {
+        $('.grid').children('.grid-item').not(this).removeClass('grid-item--gigante');
+        $( this ).toggleClass('grid-item--gigante');
+        // trigger layout
+        grid.masonry( 'stamp', $('.stamp') );
+        grid.masonry('layout');
+      });  
+      initialized = true;
+    }
+
+    function updateGrid(){
+      grid.masonry('layout');
+      console.log('updated');
+    }    
+  }
+
+
+
+  function updateImage(){
+    $('.grid-item').each(function(index, element){
+      if($(element).data("img").length !== 0) $(element).css('background-image','url(' + $(element).data("img") + ')');
+    });
+  }  
+  
+  $('#bias').click(function(){
+    $('.stamp').find('button').removeClass('current');
+    bias = !bias;
+    if(bias) $(this).html('randomize card size'); 
+    else $(this).html('size follows views').addClass('current');
+    displayNews();
+  });
+
+  $('#views').click(function(){
+    clearMessages();
+    trending = !trending;
+    if(trending) {
+      $('#views-label').html('more likes');
+      $(this).addClass('current');
+      sort(response,'rank','asc');
+    }
+    else {
+      $('#views-label').html('less likes');
+      $(this).addClass('current');
+      sort(response,'rank','desc');
+    }
+    displayNews();
+  });
+  
+  $('#shuffle').click(function(){
+    clearMessages();
+    $(this).html('shuffle').addClass('current');
+    shuffle(response);
+    displayNews();
+  });
+
+  $('#newest').click(function(){
+    clearMessages();
+    newest = !newest;
+    if(newest) {
+      $('#newest-label').html('newest first');
+      $(this).addClass('current');
+      sort(response,'timePosted','asc');
+    }
+    else {
+      $(this).addClass('current');
+      $('#newest-label').html('oldest first');
+      sort(response,'timePosted','desc');
+    }
+    displayNews();
+  });
+  
+  function shuffle(array){
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+  }
+  
+  function sort(array,prop,order){
+    var sorted = [];
+    array.sort(function compareNumbers(a, b) {
+      if (order == 'asc') return b[prop] - a[prop];
+      else return a[prop] - b[prop];
+    });
+    return sorted;
+  }
+
+  function clearMessages(){
+    $('.stamp').find('a.button').removeClass('current');
+    $('.message').html('');
+  }
+});
+      //@ sourceURL=pen.js
+    </script>
+
+    
+    
+    
+  </body>
+</html>
+ 
+
