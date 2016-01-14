@@ -8,18 +8,18 @@
     <title>{ camper news } - by camilo delvasto</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-15029066-1', 'auto');
-  ga('send', 'pageview');
+      ga('create', 'UA-15029066-1', 'auto');
+      ga('send', 'pageview');
 
-</script>     
+    </script>     
     
-        <style>
+    <style>
       @import url(https://fonts.googleapis.com/css?family=Khand|PT+Sans);
 * {
   -webkit-box-sizing: border-box;
@@ -357,37 +357,31 @@ a.button:hover {
 }
 
     </style>
-
-    
-    
-    
   </head>
-
   <body>
-
     <div class="stamp">
-  <div class="wrapper">
-    <h1>{ camper news }</h1><span id="me">by camilo delvasto</span>
-    <p id="label-buttons">order by: </p>
-    <div id="buttons">
-      <a href="#" class="button" id="views">likes</a><label id="views-label" class="message"></label><br>
-      <a href="#" class="button" id="newest">date</a><label id="newest-label" class="message"></label><br>
-      <a href="#" class="button" id="shuffle">shuffle</a><br>
-      <label id="bias-label"><input type="checkbox" id="bias">random card size</input></label>
+      <div class="wrapper">
+        <h1>{ camper news }</h1><span id="me">by camilo delvasto</span>
+        <p id="label-buttons">order by: </p>
+        <div id="buttons">
+          <a href="#" class="button" id="views">likes</a><label id="views-label" class="message"></label><br>
+          <a href="#" class="button" id="newest">date</a><label id="newest-label" class="message"></label><br>
+          <a href="#" class="button" id="shuffle">shuffle</a><br>
+          <label id="bias-label"><input type="checkbox" id="bias">random card size</input></label>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<div class="grid" id="camperNews"></div>
+    <div class="grid" id="camperNews"></div>
     
     <script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.2/masonry.pkgd.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/masonry/3.3.2/masonry.pkgd.min.js'></script>
 
-        <script>
-        var grid;
+    <script>
+$(document).ready(function(){
+  var grid;
   var response;
   var newest = false;
-$(document).ready(function(){
   var bias = true;
   var underdog = false;
   var trending = false;
@@ -399,9 +393,10 @@ $(document).ready(function(){
     response = data; // copy the object to a global var
     displayNews(); // call the method that will manipulate the object
   }).fail(function(err){
-    console.log('error on loading camper news'+err);
+    console.log('error // loading camper news returns: '+err);
   });
   
+  // call this function any time a filter or button kicks in
   function displayNews(){
     // get the highest ranking if bias is enabled
     var max = response.reduce(function(max, element){
@@ -459,17 +454,19 @@ $(document).ready(function(){
       grid.masonry('layout');
       console.log('updated');
     }    
+
+    // helper function for updating img-src
+    function updateImage(){
+      $('.grid-item').each(function(index, element){
+        if($(element).data("img").length !== 0) $(element).css('background-image','url(' + $(element).data("img") + ')');
+      });
+    }  
   }
 
+  // lay out the grid if screen is resized
   $(window).resize(function() {if($(window).width() >= 480 && initialized) grid.masonry( 'stamp', $('.stamp') ); }).resize();
-
-
-  function updateImage(){
-    $('.grid-item').each(function(index, element){
-      if($(element).data("img").length !== 0) $(element).css('background-image','url(' + $(element).data("img") + ')');
-    });
-  }  
   
+  /* let's listen to all those buttons and checkboxes */
   $('#bias').click(function(){
     $('.stamp').find('button').removeClass('current');
     bias = !bias;
@@ -517,6 +514,7 @@ $(document).ready(function(){
     displayNews();
   });
   
+  /* helper functions: shuffle, sort and clear */
   function shuffle(array){
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -541,12 +539,7 @@ $(document).ready(function(){
     $('.message').html('');
   }
 });
-      //@ sourceURL=pen.js
     </script>
-
-    
-    
-    
   </body>
 </html>
  
