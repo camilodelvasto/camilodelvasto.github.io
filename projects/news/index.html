@@ -19,8 +19,6 @@
 
 </script>     
     
-    
-    
         <style>
       @import url(https://fonts.googleapis.com/css?family=Khand|PT+Sans);
 * {
@@ -106,11 +104,6 @@ a.button:hover {
 }
 
 /* ---- grid ---- */
-.grid {
-  background: #EEE;
-  max-width: 1200px;
-}
-
 /* clearfix */
 .grid:after {
   content: '';
@@ -193,7 +186,7 @@ a.button:hover {
   position: absolute;
   left: 8px;
   top: 8px;
-  width: 144px;
+  width: 154px;
   height: 360px;
   background: orange;
   border-radius: 5px;
@@ -264,10 +257,16 @@ a.button:hover {
 }
 
 @media screen and (max-width: 490px) {
+  .grid {
+    margin-top: 60px;
+  }
+
   .grid-item {
     width: 100%;
     height: 200px;
     position: relative;
+    margin: 0;
+    margin-bottom: 3%;
   }
   .grid-item .card-content {
     position: absolute;
@@ -295,8 +294,12 @@ a.button:hover {
     height: 200px;
   }
 
+  .grid-item--gigante {
+    min-width: auto !important;
+  }
   .grid-item--gigante .card-content {
     min-width: 0;
+    width: 96%;
   }
 
   .grid-item--width3 h2, .grid-item--width4 h2, .grid-item--gigante h2 {
@@ -437,7 +440,7 @@ $(document).ready(function(){
         itemSelector: '.grid-item',
         columnWidth: 160
       });
-      grid.masonry( 'stamp', $('.stamp') );
+      if ($(window).width() > 480) grid.masonry( 'stamp', $('.stamp') );
       grid.masonry('layout');
 
       // listen to grid items
@@ -445,8 +448,8 @@ $(document).ready(function(){
       grid.on( 'click', '.grid-item', function() {
         $('.grid').children('.grid-item').not(this).removeClass('grid-item--gigante');
         $( this ).toggleClass('grid-item--gigante');
-        // trigger layout
-        grid.masonry( 'stamp', $('.stamp') );
+        // trigger layout for medium-bigger screens
+        if ($(window).width() > 480) grid.masonry( 'stamp', $('.stamp') );
         grid.masonry('layout');
       });  
       initialized = true;
@@ -458,6 +461,7 @@ $(document).ready(function(){
     }    
   }
 
+  $(window).resize(function() {if($(window).width() >= 480 && initialized) grid.masonry( 'stamp', $('.stamp') ); }).resize();
 
 
   function updateImage(){
