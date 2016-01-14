@@ -384,7 +384,6 @@ a.button:hover {
         var grid;
   var response;
   var newest = false;
-  var imagesLoaded = false;
 $(document).ready(function(){
   var bias = true;
   var underdog = false;
@@ -462,10 +461,9 @@ $(document).ready(function(){
 
 
   function updateImage(){
-    if(!imagesLoaded) $('.grid-item').each(function(index, element){
+    $('.grid-item').each(function(index, element){
       if($(element).data("img").length !== 0) $(element).css('background-image','url(' + $(element).data("img") + ')');
     });
-    imagesLoaded = true;
   }  
   
   $('#bias').click(function(){
