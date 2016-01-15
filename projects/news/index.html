@@ -20,7 +20,7 @@
     </script>     
     
     <style>
-      @import url(https://fonts.googleapis.com/css?family=Khand|PT+Sans);
+@import url(https://fonts.googleapis.com/css?family=Khand|PT+Sans);
 * {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -34,9 +34,9 @@ body {
 
 h2 {
   font-family: Khand, sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   letter-spacing: .0125em;
-  line-height: 1;
+  line-height: 1.2em;
   margin: 0;
   margin-bottom: 5px;
 }
@@ -113,8 +113,8 @@ a.button:hover {
 
 /* ---- grid-item ---- */
 .grid-item {
-  width: 154px;
-  height: 154px;
+  width: 174px;
+  height: 174px;
   float: left;
   margin: 3px;
   border-radius: 5px;
@@ -124,22 +124,22 @@ a.button:hover {
 }
 
 .grid-item--width2 {
-  width: 154px;
+  width: 174px;
   height: 200px;
 }
 
 .grid-item--width3 {
-  width: 314px;
+  width: 354px;
   height: 280px;
 }
 
 .grid-item--width4 {
-  width: 314px;
+  width: 354px;
   height: 300px;
 }
 
 .grid-item--width5 {
-  width: 314px;
+  width: 354px;
   height: 360px;
 }
 
@@ -157,10 +157,10 @@ a.button:hover {
 
 .grid-item--gigante {
   height: 300px;
-  min-width: 314px;
+  min-width: 334px;
 }
 .grid-item--gigante .card-content {
-  min-width: 294px;
+  min-width: 314px;
   background: rgba(220, 250, 180, 0.8);
 }
 .grid-item--gigante .card-content .meta, .grid-item--gigante .card-content a.button, .grid-item--gigante .card-content div.rank {
@@ -186,7 +186,7 @@ a.button:hover {
   position: absolute;
   left: 8px;
   top: 8px;
-  width: 154px;
+  width: 174px;
   height: 360px;
   background: orange;
   border-radius: 5px;
@@ -219,7 +219,7 @@ a.button:hover {
   bottom: 10px;
   border-radius: 5px;
   padding: 10px;
-  width: 134px;
+  width: 154px;
   height: auto;
   max-height: 80%;
   min-height: 80px;
@@ -232,25 +232,25 @@ a.button:hover {
 }
 
 .grid-item--width2 .card-content {
-  width: 134px;
+  width: 154px;
 }
 
 .grid-item--width3 .card-content {
-  width: 294px;
+  width: 334px;
 }
 .grid-item--width3 .card-content .meta {
   display: blocK;
 }
 
 .grid-item--width4 .card-content {
-  width: 294px;
+  width: 334px;
 }
 .grid-item--width4 .card-content .meta {
   display: blocK;
 }
 
 .grid-item--width5 .card-content {
-  width: 294px;
+  width: 334px;
 }
 .grid-item--width5 .card-content .meta {
   display: blocK;
@@ -433,7 +433,7 @@ $(document).ready(function(){
       if (initialized) grid.masonry('destroy');
       grid = $('.grid').masonry({
         itemSelector: '.grid-item',
-        columnWidth: 160
+        columnWidth: 180
       });
       if ($(window).width() > 480) grid.masonry( 'stamp', $('.stamp') );
       grid.masonry('layout');
